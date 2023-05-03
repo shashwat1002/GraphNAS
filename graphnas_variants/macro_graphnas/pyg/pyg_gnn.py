@@ -67,18 +67,13 @@ class GraphNet(BaseNet):
                 if self.batch_normal:
                     output = self.bns[i](output)
 
-                output2 = act(layer(output, edge_index_all) + fc(output))
+                output = act(layer(output, edge_index_all) + fc(output))
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
                 output = F.dropout(output, p=layer.dropout, training=self.training)
                 if self.batch_normal:
                     output = self.bns[i](output)
-                output2 = act(layer(output, edge_index_all))
-    
-        if self.connectivity == 'stack': output = output2
-        elif self.connectivity == 'skip-sum': output += output2
-        elif self.connectivity == 'skip-cat': output = torch.concat([output2, output], dim=-1)
-
+                output = act(layer(output, edge_index_all))
         if not self.multi_label:
             output = F.log_softmax(output, dim=1)
         return output
