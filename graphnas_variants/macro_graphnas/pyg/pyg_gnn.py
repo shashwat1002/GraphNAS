@@ -40,14 +40,17 @@ class GraphNet(BaseNet):
             aggregator_type = actions[i * state_num + 1]
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
-            out_channels = actions[i * state_num + 4]
+            drop_out = actions[i * state_num + 5]
+            connectivity = actions[i * state_num + 6]
+            out_channels = actions[i * state_num + 4] \
+                           + (1 if connectivity == 'skip-cat' else 0) * in_channels
             concat = True
             if i == layer_nums - 1:
                 concat = False
             if self.batch_normal:
                 self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
             self.layers.append(
-                GeoLayer(in_channels, out_channels, head_num, concat, dropout=self.dropout,
+                GeoLayer(in_channels, out_channels, head_num, concat, dropout=drop_out,
                          att_type=attention_type, agg_type=aggregator_type, ))
             self.acts.append(act_map(act))
             if self.residual:
