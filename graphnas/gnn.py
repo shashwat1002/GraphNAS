@@ -43,7 +43,7 @@ class GraphNet(torch.nn.Module):
             raise RuntimeError("wrong structure")
         return layer_nums
 
-    def evaluate_structure(self, actions, layer_nums, state_num=6):
+    def evaluate_structure(self, actions, layer_nums, state_num=7):
         hidden_units_list = []
         out_channels_list = []
         for i in range(layer_nums):

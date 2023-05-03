@@ -8,7 +8,7 @@ from graphnas_variants.macro_graphnas.pyg.pyg_gnn_layer import GeoLayer
 
 class GraphNet(BaseNet):
 
-    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=True, state_num=5,
+    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=True, state_num=7,
                  residual=False):
         self.residual = residual
         self.batch_normal = batch_normal
@@ -25,7 +25,7 @@ class GraphNet(BaseNet):
         self.gates = torch.nn.ModuleList()
         self.build_hidden_layers(actions, batch_normal, drop_out, self.layer_nums, num_feat, num_label, state_num)
 
-    def build_hidden_layers(self, actions, batch_normal, drop_out, layer_nums, num_feat, num_label, state_num=6):
+    def build_hidden_layers(self, actions, batch_normal, drop_out, layer_nums, num_feat, num_label, state_num=7):
 
         # build hidden layer
         for i in range(layer_nums):
