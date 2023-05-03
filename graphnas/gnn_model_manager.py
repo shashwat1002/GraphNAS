@@ -96,9 +96,7 @@ class CitationGNNManager(object):
     # train from scratch
     def train(self, actions=None, format="two"):
         origin_action = actions
-        print("before process", actions)
         actions = process_action(actions, format, self.args)
-        print("after process", actions)
         print("train action:", actions)
 
         # create model
@@ -145,7 +143,6 @@ class CitationGNNManager(object):
         return self.train(actions, format)
 
     def test_with_param(self, actions=None, format="two", with_retrain=False):
-        print(actions)
         return self.train(actions, format)
 
     @staticmethod
