@@ -197,6 +197,7 @@ class Trainer(object):
         reward_list = []
         for gnn in gnn_list:
             gnn = self.form_gnn_info(gnn)
+            print(gnn)
             reward = self.submodel_manager.test_with_param(gnn, format=self.args.format,
                                                            with_retrain=self.with_retrain)
 
