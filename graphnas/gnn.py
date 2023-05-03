@@ -32,6 +32,7 @@ class GraphNet(torch.nn.Module):
         self.build_hidden_layers(actions, batch_normal, drop_out, self.layer_nums, num_feat, num_label, state_num)
 
     def evalate_actions(self, actions, state_num):
+        print(actions)
         state_length = len(actions)
         if state_length % state_num != 0:
             raise RuntimeError("Wrong Input: unmatchable input")
