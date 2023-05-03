@@ -61,6 +61,7 @@ class GraphNet(BaseNet):
 
     def forward(self, x, edge_index_all):
         input = x
+        print(self.acts[0].keys())
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
@@ -68,7 +69,7 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
-                if layer.connectivity == 'stack': input = output
+                if connectivity == 'stack': input = output
                 elif layer.connectivity == 'skip-sum': input += output
                 elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
