@@ -79,7 +79,9 @@ def process_action(actions, type, args):
     if type == 'two':
         actual_action = actions
         # actual_action[-2] = args.num_class
+        print(actions)
         actual_action[-1] = args.num_class
+        print(actions)
         # actual_action.append( args.num_class)
 
         return actual_action
