@@ -20,7 +20,7 @@ class GeoLayer(MessagePassing):
                  bias=True,
                  att_type="gat",
                  agg_type="sum",
-                 conn_type="stack"
+                 conn_type="stack",
                  pool_dim=0):
         if agg_type in ["sum", "mlp"]:
             super(GeoLayer, self).__init__('add')
