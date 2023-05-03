@@ -77,9 +77,9 @@ class GraphNet(BaseNet):
 
                 output = act(layer(input, edge_index_all))
 
-        if self.connectivity == 'stack': input = output
-        elif self.connectivity == 'skip-sum': input += output
-        elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
+        if self.connectivity == 'stack': output = input
+        elif self.connectivity == 'skip-sum': output += input
+        elif self.connectivity == 'skip-cat': output = torch.concat([input, output], dim=-1)
 
         if not self.multi_label:
             output = F.log_softmax(output, dim=1)
