@@ -129,6 +129,7 @@ class Trainer(object):
                 actual_action["action"] = gnn
                 actual_action["hyper_param"] = [0.005, 0.8, 5e-5, 128]
             return actual_action
+        print(gnn)
         return gnn
 
     def train(self):
