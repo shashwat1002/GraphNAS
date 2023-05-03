@@ -156,6 +156,7 @@ class SimpleNASController(torch.nn.Module):
         dags = self._construct_action(actions)
 
         if with_details:
+            print(dags)
             return dags, torch.cat(log_probs), torch.cat(entropies)
 
         return dags
