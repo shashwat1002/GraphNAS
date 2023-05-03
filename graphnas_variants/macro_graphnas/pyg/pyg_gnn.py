@@ -63,14 +63,14 @@ class GraphNet(BaseNet):
         output = x
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
-                output = F.dropout(output, p=layer.drop_out, training=self.training)
+                output = F.dropout(output, p=layer.dropout, training=self.training)
                 if self.batch_normal:
                     output = self.bns[i](output)
 
                 output = act(layer(output, edge_index_all) + fc(output))
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
-                output = F.dropout(output, p=layer.drop_out, training=self.training)
+                output = F.dropout(output, p=layer.dropout, training=self.training)
                 if self.batch_normal:
                     output = self.bns[i](output)
                 output = act(layer(output, edge_index_all))
