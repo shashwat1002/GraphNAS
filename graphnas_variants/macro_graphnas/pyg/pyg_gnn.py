@@ -67,7 +67,7 @@ class GraphNet(BaseNet):
                 if self.batch_normal:
                     input = self.bns[i](input)
 
-                output = act(layer(input, edge_index_all) + fc(output))
+                output = act(layer(input, edge_index_all) + fc(input))
 
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
