@@ -6,7 +6,7 @@ import torch.nn.functional as F
 class GraphNet(torch.nn.Module):
 
     def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=True, residual=True,
-                 state_num=5):
+                 state_num=7):
         '''
         :param actions:
         :param multi_label:
@@ -17,7 +17,7 @@ class GraphNet(torch.nn.Module):
         self.multi_label = multi_label
         self.num_feat = num_feat
         self.num_label = num_label
-        self.dropout = drop_out
+        #self.dropout = drop_out
         self.residual = residual
         # check structure of GNN
         self.layer_nums = self.evalate_actions(actions, state_num)
@@ -69,7 +69,10 @@ class GraphNet(torch.nn.Module):
             aggregator_type = actions[i * state_num + 1]
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
-            out_channels = actions[i * state_num + 4]
+            drop_out = actions[i * state_num + 5]
+            connectivity = actions[i * state_num + 6]
+            out_channels = actions[i * state_num + 4] \
+                           + (1 if connectivity == 'skip-cat' else 0) * in_channels
             # Multi-head used in GAT.
             # "concat" is True, concat output of each head;
             # "concat" is False, get average of each head output;
@@ -89,9 +92,12 @@ class GraphNet(torch.nn.Module):
 
     def forward(self, feat, g):
 
-        output = feat
+        input = feat
         for i, layer in enumerate(self.layers):
-            output = layer(output, g)
+            output = layer(input, g)
+            if self.connectivity == 'stack': input = output
+            elif self.connectivity == 'skip-sum': input += output
+            elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
         return output
 
