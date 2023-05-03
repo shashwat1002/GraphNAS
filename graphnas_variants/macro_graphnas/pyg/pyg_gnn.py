@@ -40,9 +40,9 @@ class GraphNet(BaseNet):
             aggregator_type = actions[i * state_num + 1]
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
-            drop_out = actions[i * state_num + 5]
-            connectivity = actions[i * state_num + 6]
-            out_channels = actions[i * state_num + 4] \
+            drop_out = actions[i * state_num + 4]
+            connectivity = actions[i * state_num + 5]
+            out_channels = actions[i * state_num + 6] \
                            + (1 if connectivity == 'skip-cat' else 0) * in_channels
             concat = True
             if i == layer_nums - 1:
