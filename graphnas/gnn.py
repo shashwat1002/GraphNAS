@@ -99,7 +99,7 @@ class GraphNet(torch.nn.Module):
             elif self.connectivity == 'skip-sum': input += output
             elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
-        return output
+        return input
 
     def __repr__(self):
         result_lines = ""
