@@ -48,7 +48,7 @@ class GraphNet(torch.nn.Module):
         out_channels_list = []
         for i in range(layer_nums):
             head_num = actions[i * state_num + 3]
-            out_channels = actions[i * state_num + 4]
+            out_channels = actions[i * state_num + 6]
             hidden_units_list.append(head_num * out_channels)
             out_channels_list.append(out_channels)
 
