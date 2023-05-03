@@ -51,7 +51,7 @@ class GraphNet(BaseNet):
                 self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
             self.layers.append(
                 GeoLayer(in_channels, out_channels, head_num, concat, dropout=drop_out,
-                         att_type=attention_type, agg_type=aggregator_type, ))
+                         att_type=attention_type, agg_type=aggregator_type, conn_type=connectivity))
             self.acts.append(act_map(act))
             if self.residual:
                 if concat:
@@ -61,7 +61,6 @@ class GraphNet(BaseNet):
 
     def forward(self, x, edge_index_all):
         input = x
-        print(self.acts[0].keys())
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
@@ -69,7 +68,7 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
-                if connectivity == 'stack': input = output
+                if layer.connectivity == 'stack': input = output
                 elif layer.connectivity == 'skip-sum': input += output
                 elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
