@@ -60,26 +60,24 @@ class GraphNet(BaseNet):
                     self.fcs.append(torch.nn.Linear(in_channels, out_channels))
 
     def forward(self, x, edge_index_all):
-        input = x
+        output = x
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
-                input = F.dropout(input, p=layer.dropout, training=self.training)
+                output = F.dropout(output, p=layer.dropout, training=self.training)
                 if self.batch_normal:
-                    input = self.bns[i](input)
+                    output = self.bns[i](output)
 
-                output = act(layer(input, edge_index_all) + fc(input))
-
+                output2 = act(layer(output, edge_index_all) + fc(output))
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
-                input = F.dropout(input, p=layer.dropout, training=self.training)
+                output = F.dropout(output, p=layer.dropout, training=self.training)
                 if self.batch_normal:
-                    input = self.bns[i](input)
-
-                output = act(layer(input, edge_index_all))
-
-        if self.connectivity == 'stack': output = input
-        elif self.connectivity == 'skip-sum': output += input
-        elif self.connectivity == 'skip-cat': output = torch.concat([input, output], dim=-1)
+                    output = self.bns[i](output)
+                output2 = act(layer(output, edge_index_all))
+    
+        if self.connectivity == 'stack': output = output2
+        elif self.connectivity == 'skip-sum': output += output2
+        elif self.connectivity == 'skip-cat': output = torch.concat([output2, output], dim=-1)
 
         if not self.multi_label:
             output = F.log_softmax(output, dim=1)
