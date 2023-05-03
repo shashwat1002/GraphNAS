@@ -68,9 +68,9 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
-                if self.connectivity == 'stack': input = output
-                elif self.connectivity == 'skip-sum': input += output
-                elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
+                if layer.connectivity == 'stack': input = output
+                elif layer.connectivity == 'skip-sum': input += output
+                elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
 
@@ -80,9 +80,9 @@ class GraphNet(BaseNet):
                 if self.batch_normal:
                     input = self.bns[i](input)
                 output = act(layer(input, edge_index_all))
-                if self.connectivity == 'stack': input = output
-                elif self.connectivity == 'skip-sum': input += output
-                elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
+                if layer.connectivity == 'stack': input = output
+                elif layer.connectivity == 'skip-sum': input += output
+                elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
             
             output = input
 
