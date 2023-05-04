@@ -52,8 +52,8 @@ class GraphNet(BaseNet):
             concat = True
             if i == layer_nums - 1:
                 concat = False
-            if self.batch_normal:
-                self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
+            #if self.batch_normal:
+            #    self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
             self.layers.append(
                 GeoLayer(in_channels, out_channels, head_num, concat, dropout=drop_out,
                          att_type=attention_type, agg_type=aggregator_type, batch_norm=batch_norm))

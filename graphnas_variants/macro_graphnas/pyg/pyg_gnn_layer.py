@@ -4,6 +4,7 @@ from torch.nn import Parameter
 from torch_geometric.nn.inits import glorot, zeros
 from torch_geometric.utils import remove_self_loops, add_self_loops, add_remaining_self_loops, softmax
 from torch_scatter import scatter_add
+from icecream import ic
 
 from graphnas_variants.macro_graphnas.pyg.message_passing import MessagePassing
 
@@ -65,6 +66,7 @@ class GeoLayer(MessagePassing):
             pass
         if batch_norm:
             self.bns = torch.nn.BatchNorm1d(in_channels, momentum=0.5)
+            ic(in_channels)
 
         self.reset_parameters()
 

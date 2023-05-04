@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 class GraphNet(torch.nn.Module):
 
-    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=True, residual=True,
+    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=False, residual=True,
                  state_num=7):
         '''
         :param actions:
