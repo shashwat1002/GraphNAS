@@ -47,10 +47,6 @@ class GraphNet(BaseNet):
             #               + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
             out_channels = (actions[i * state_num + 6] if connectivity == 'stack' or i == layer_nums-1 else in_channels) * head_num
 
-            print(i)
-            print(in_channels)
-            print(out_channels)
-
             concat = True
             if i == layer_nums - 1:
                 concat = False
@@ -87,6 +83,13 @@ class GraphNet(BaseNet):
                 if self.batch_normal:
                     input = self.bns[i](input)
                 output = act(layer(input, edge_index_all))
+
+                ic(i)
+                ic(input.shape)
+                ic(layer.in_channels)
+                ic(layer.out_channels)
+                ic(output.shape)
+
                 if layer.connectivity == 'stack': input = output
                 elif layer.connectivity == 'skip-sum': input += output
                 #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
