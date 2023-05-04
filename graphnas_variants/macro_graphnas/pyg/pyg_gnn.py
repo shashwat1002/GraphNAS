@@ -45,10 +45,6 @@ class GraphNet(BaseNet):
             batch_norm = actions[i * state_num + 5]
             out_channels = actions[i * state_num + 6]
 
-            print("building", i)
-            ic(in_channels)
-            ic(out_channels)
-
             concat = True
             if i == layer_nums - 1:
                 concat = False
@@ -66,7 +62,6 @@ class GraphNet(BaseNet):
 
     def forward(self, x, edge_index_all):
         input = x
-        print("running")
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
