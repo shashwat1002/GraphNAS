@@ -70,25 +70,20 @@ class GraphNet(BaseNet):
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
-                ic(i)
-                ic(input.shape)
                 if layer.batch_norm:
                     input = layer.bns(input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
-
-            output = input
+                input = output
 
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
-                ic(i)
-                ic(input.shape)
                 if layer.batch_norm:
                     input = layer.bns(input)
                 output = act(layer(input, edge_index_all))
+                input = output
 
-            output = input
 
         if not self.multi_label:
             output = F.log_softmax(output, dim=1)
