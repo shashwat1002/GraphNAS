@@ -34,7 +34,7 @@ class GraphNet(BaseNet):
             if i == 0:
                 in_channels = num_feat
             else:
-                in_channels = out_channels * head_num
+                in_channels = (out_channels - in_channels) * head_num + in_channels
 
             # extract layer information
             attention_type = actions[i * state_num + 0]
