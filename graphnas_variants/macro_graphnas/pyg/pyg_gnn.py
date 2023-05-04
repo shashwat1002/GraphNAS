@@ -47,6 +47,10 @@ class GraphNet(BaseNet):
             #               + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
             out_channels = actions[i * state_num + 6] if connectivity == 'stack' or i == layer_nums-1 else in_channels
 
+            print(i)
+            print(in_channels)
+            print(out_channels)
+
             concat = True
             if i == layer_nums - 1:
                 concat = False
