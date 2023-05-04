@@ -9,7 +9,7 @@ from icecream import ic
 
 class GraphNet(BaseNet):
 
-    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=True, state_num=7,
+    def __init__(self, actions, num_feat, num_label, drop_out=0.6, multi_label=False, batch_normal=False, state_num=7,
                  residual=False):
         self.residual = residual
         self.batch_normal = batch_normal
@@ -44,6 +44,10 @@ class GraphNet(BaseNet):
             drop_out = actions[i * state_num + 4]
             batch_norm = actions[i * state_num + 5]
             out_channels = actions[i * state_num + 6]
+
+            ic(i)
+            ic(in_channels)
+            ic(batch_norm)
 
             concat = True
             if i == layer_nums - 1:
