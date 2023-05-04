@@ -43,12 +43,9 @@ class GraphNet(BaseNet):
             head_num = actions[i * state_num + 3]
             drop_out = actions[i * state_num + 4]
             connectivity = actions[i * state_num + 5]
-            out_channels = actions[i * state_num + 6] \
-                           + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
-
-            ic(i)
-            ic(in_channels)
-            ic(out_channels)
+            #out_channels = actions[i * state_num + 6] \
+            #               + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
+            out_channels = actions[i * state_num + 6] if connectivity == 'stack' else in_channels
 
             concat = True
             if i == layer_nums - 1:
@@ -75,8 +72,8 @@ class GraphNet(BaseNet):
 
                 output = act(layer(input, edge_index_all) + fc(input))
                 if layer.connectivity == 'stack': input = output
-                #elif layer.connectivity == 'skip-sum': input += output
-                elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
+                elif layer.connectivity == 'skip-sum': input += output
+                #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
 
@@ -87,8 +84,8 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
                 output = act(layer(input, edge_index_all))
                 if layer.connectivity == 'stack': input = output
-                #elif layer.connectivity == 'skip-sum': input += output
-                elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
+                elif layer.connectivity == 'skip-sum': input += output
+                #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
 
