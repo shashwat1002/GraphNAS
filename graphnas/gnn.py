@@ -47,7 +47,7 @@ class GraphNet(torch.nn.Module):
         out_channels_list = []
         for i in range(layer_nums):
             head_num = actions[i * state_num + 3]
-            out_channels = actions[i * state_num + 6]
+            out_channels = actions[i * state_num + 5]
             hidden_units_list.append(head_num * out_channels)
             out_channels_list.append(out_channels)
 
@@ -70,9 +70,7 @@ class GraphNet(torch.nn.Module):
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
             drop_out = actions[i * state_num + 4]
-            connectivity = actions[i * state_num + 5]
-            out_channels = actions[i * state_num + 6] \
-                           + (1 if connectivity == 'skip-cat' else 0) * in_channels
+            out_channels = actions[i * state_num + 5]
             # Multi-head used in GAT.
             # "concat" is True, concat output of each head;
             # "concat" is False, get average of each head output;
@@ -95,9 +93,6 @@ class GraphNet(torch.nn.Module):
         input = feat
         for i, layer in enumerate(self.layers):
             output = layer(input, g)
-            if self.connectivity == 'stack': input = output
-            elif self.connectivity == 'skip-sum': input += output
-            elif self.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
         return input
 

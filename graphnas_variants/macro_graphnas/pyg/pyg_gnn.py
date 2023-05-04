@@ -42,10 +42,7 @@ class GraphNet(BaseNet):
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
             drop_out = actions[i * state_num + 4]
-            connectivity = actions[i * state_num + 5]
-            #out_channels = actions[i * state_num + 6] \
-            #               + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
-            out_channels = actions[i * state_num + 6] if connectivity == 'stack' or i == layer_nums-1 else in_channels
+            out_channels = actions[i * state_num + 5]
 
             concat = True
             if i == layer_nums - 1:
@@ -54,7 +51,7 @@ class GraphNet(BaseNet):
                 self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
             self.layers.append(
                 GeoLayer(in_channels, out_channels, head_num, concat, dropout=drop_out,
-                         att_type=attention_type, agg_type=aggregator_type, conn_type=connectivity))
+                         att_type=attention_type, agg_type=aggregator_type))
             self.acts.append(act_map(act))
             if self.residual:
                 if concat:
@@ -71,9 +68,6 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
-                if layer.connectivity == 'stack': input = output
-                elif layer.connectivity == 'skip-sum': input = torch.repeat_interleave(input, layer.heads, 1) + output
-                #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
 
@@ -83,10 +77,6 @@ class GraphNet(BaseNet):
                 if self.batch_normal:
                     input = self.bns[i](input)
                 output = act(layer(input, edge_index_all))
-
-                if layer.connectivity == 'stack': input = output
-                elif layer.connectivity == 'skip-sum': input = torch.repeat_interleave(input, layer.heads, 1) + output
-                #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
 
