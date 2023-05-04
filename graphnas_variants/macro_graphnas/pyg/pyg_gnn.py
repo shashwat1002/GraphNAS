@@ -47,6 +47,7 @@ class GraphNet(BaseNet):
 
             print("building", i)
             ic(in_channels)
+            ic(out_channels)
 
             concat = True
             if i == layer_nums - 1:
