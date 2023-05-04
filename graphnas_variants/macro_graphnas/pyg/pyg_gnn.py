@@ -43,7 +43,7 @@ class GraphNet(BaseNet):
             drop_out = actions[i * state_num + 4]
             connectivity = actions[i * state_num + 5]
             out_channels = actions[i * state_num + 6] \
-                           + (1 if connectivity == 'skip-cat' else 0) * in_channels
+                           + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
             concat = True
             if i == layer_nums - 1:
                 concat = False
