@@ -19,8 +19,8 @@ class GraphNet(BaseNet):
     def build_model(self, actions, batch_normal, drop_out, num_feat, num_label, state_num):
         if self.residual:
             self.fcs = torch.nn.ModuleList()
-        if self.batch_normal:
-            self.bns = torch.nn.ModuleList()
+        #if self.batch_normal:
+        #    self.bns = torch.nn.ModuleList()
         self.layers = torch.nn.ModuleList()
         self.acts = []
         self.gates = torch.nn.ModuleList()
@@ -42,7 +42,8 @@ class GraphNet(BaseNet):
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
             drop_out = actions[i * state_num + 4]
-            out_channels = actions[i * state_num + 5]
+            batch_norm = actions[i * state_num + 5]
+            out_channels = actions[i * state_num + 6]
 
             concat = True
             if i == layer_nums - 1:
@@ -51,7 +52,7 @@ class GraphNet(BaseNet):
                 self.bns.append(torch.nn.BatchNorm1d(in_channels, momentum=0.5))
             self.layers.append(
                 GeoLayer(in_channels, out_channels, head_num, concat, dropout=drop_out,
-                         att_type=attention_type, agg_type=aggregator_type))
+                         att_type=attention_type, agg_type=aggregator_type, batch_norm=batch_norm))
             self.acts.append(act_map(act))
             if self.residual:
                 if concat:
@@ -64,8 +65,8 @@ class GraphNet(BaseNet):
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
-                if self.batch_normal:
-                    input = self.bns[i](input)
+                if layer.batch_normal:
+                    input = layer.bns[i](input)
 
                 output = act(layer(input, edge_index_all) + fc(input))
 
@@ -74,8 +75,8 @@ class GraphNet(BaseNet):
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
-                if self.batch_normal:
-                    input = self.bns[i](input)
+                if layer.batch_normal:
+                    input = layer.bns[i](input)
                 output = act(layer(input, edge_index_all))
 
             output = input

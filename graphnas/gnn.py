@@ -47,7 +47,7 @@ class GraphNet(torch.nn.Module):
         out_channels_list = []
         for i in range(layer_nums):
             head_num = actions[i * state_num + 3]
-            out_channels = actions[i * state_num + 5]
+            out_channels = actions[i * state_num + 6]
             hidden_units_list.append(head_num * out_channels)
             out_channels_list.append(out_channels)
 
@@ -70,7 +70,8 @@ class GraphNet(torch.nn.Module):
             act = actions[i * state_num + 2]
             head_num = actions[i * state_num + 3]
             drop_out = actions[i * state_num + 4]
-            out_channels = actions[i * state_num + 5]
+            batch_norm = actions[i * state_num + 5]
+            out_channels = actions[i * state_num + 6]
             # Multi-head used in GAT.
             # "concat" is True, concat output of each head;
             # "concat" is False, get average of each head output;

@@ -20,7 +20,8 @@ class GeoLayer(MessagePassing):
                  bias=True,
                  att_type="gat",
                  agg_type="sum",
-                 pool_dim=0):
+                 pool_dim=0,
+                 batch_norm=True):
         if agg_type in ["sum", "mlp"]:
             super(GeoLayer, self).__init__('add')
         elif agg_type in ["mean", "max"]:
@@ -33,6 +34,7 @@ class GeoLayer(MessagePassing):
         self.dropout = dropout
         self.att_type = att_type
         self.agg_type = agg_type
+        self.batch_norm = batch_norm
 
         # GCN weight
         self.gcn_weight = None
@@ -61,6 +63,9 @@ class GeoLayer(MessagePassing):
             self.pool_layer.append(torch.nn.Linear(self.pool_dim, self.out_channels))
         else:
             pass
+        if batch_norm:
+            self.bns = torch.nn.BatchNorm1d(in_channels, momentum=0.5)
+
         self.reset_parameters()
 
     @staticmethod

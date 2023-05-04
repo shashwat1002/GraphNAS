@@ -14,6 +14,7 @@ class MacroSearchSpace(object):
                                       "softplus", "leaky_relu", "relu6", "elu"],
                 'number_of_heads': [1, 2, 4, 6, 8, 16],
                 'dropout': [False, 0.3, 0.6],
+                'batch_norm': [True, False],
                 'hidden_units': [4, 8, 16, 32, 64, 128, 256],
             }
 
