@@ -34,7 +34,7 @@ class GraphNet(BaseNet):
             if i == 0:
                 in_channels = num_feat
             else:
-                in_channels = out_channels
+                in_channels = out_channels * head_num
 
             # extract layer information
             attention_type = actions[i * state_num + 0]
@@ -72,7 +72,7 @@ class GraphNet(BaseNet):
 
                 output = act(layer(input, edge_index_all) + fc(input))
                 if layer.connectivity == 'stack': input = output
-                elif layer.connectivity == 'skip-sum': input += output
+                elif layer.connectivity == 'skip-sum': input = torch.repeat_interleave(input, layer.heads, 1) + output
                 #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
@@ -91,7 +91,7 @@ class GraphNet(BaseNet):
                 ic(output.shape)
 
                 if layer.connectivity == 'stack': input = output
-                elif layer.connectivity == 'skip-sum': input += output
+                elif layer.connectivity == 'skip-sum': input = torch.repeat_interleave(input, layer.heads, 1) + output
                 #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
 
             output = input
