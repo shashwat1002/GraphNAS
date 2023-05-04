@@ -84,12 +84,6 @@ class GraphNet(BaseNet):
                     input = self.bns[i](input)
                 output = act(layer(input, edge_index_all))
 
-                ic(i)
-                ic(input.shape)
-                ic(layer.in_channels)
-                ic(layer.out_channels)
-                ic(output.shape)
-
                 if layer.connectivity == 'stack': input = output
                 elif layer.connectivity == 'skip-sum': input = torch.repeat_interleave(input, layer.heads, 1) + output
                 #elif layer.connectivity == 'skip-cat': input = torch.concat([input, output], dim=-1)
