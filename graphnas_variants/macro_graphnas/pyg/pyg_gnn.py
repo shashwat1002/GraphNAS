@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from graphnas.gnn import GraphNet as BaseNet
 from graphnas.search_space import act_map
 from graphnas_variants.macro_graphnas.pyg.pyg_gnn_layer import GeoLayer
+from icecream import ic
 
 
 class GraphNet(BaseNet):
@@ -44,6 +45,11 @@ class GraphNet(BaseNet):
             connectivity = actions[i * state_num + 5]
             out_channels = actions[i * state_num + 6] \
                            + (1 if connectivity == 'skip-cat' and i < layer_nums-1 else 0) * in_channels
+
+            ic(i)
+            ic(in_channels)
+            ic(out_channels)
+
             concat = True
             if i == layer_nums - 1:
                 concat = False
