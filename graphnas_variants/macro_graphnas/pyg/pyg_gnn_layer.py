@@ -66,7 +66,6 @@ class GeoLayer(MessagePassing):
             pass
         if batch_norm:
             self.bns = torch.nn.BatchNorm1d(in_channels, momentum=0.5)
-            ic(in_channels)
 
         self.reset_parameters()
 
