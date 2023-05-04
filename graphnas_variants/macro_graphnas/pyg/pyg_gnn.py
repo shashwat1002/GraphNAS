@@ -45,9 +45,6 @@ class GraphNet(BaseNet):
             batch_norm = actions[i * state_num + 5]
             out_channels = actions[i * state_num + 6]
 
-            ic(i)
-            ic(in_channels)
-            ic(batch_norm)
 
             concat = True
             if i == layer_nums - 1:
@@ -69,6 +66,8 @@ class GraphNet(BaseNet):
         if self.residual:
             for i, (act, layer, fc) in enumerate(zip(self.acts, self.layers, self.fcs)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
+                ic(i)
+                ic(input.shape)
                 if layer.batch_norm:
                     input = layer.bns(input)
 
@@ -79,6 +78,8 @@ class GraphNet(BaseNet):
         else:
             for i, (act, layer) in enumerate(zip(self.acts, self.layers)):
                 input = F.dropout(input, p=layer.dropout, training=self.training)
+                ic(i)
+                ic(input.shape)
                 if layer.batch_norm:
                     input = layer.bns(input)
                 output = act(layer(input, edge_index_all))
