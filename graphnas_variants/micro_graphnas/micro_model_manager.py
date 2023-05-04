@@ -7,7 +7,7 @@ import torch_geometric.transforms as T
 from graphnas.utils.label_split import fix_size_split
 
 
-def load_data(dataset="Cora", supervised=False, full_data=True):
+def load_data(dataset="Citeseer", supervised=False, full_data=True):
     '''
     support semi-supervised and supervised
     :param dataset:
@@ -15,28 +15,29 @@ def load_data(dataset="Cora", supervised=False, full_data=True):
     :return:
     '''
     path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-    if dataset in ["CS", "Physics"]:
-        dataset = Coauthor(path, dataset, T.NormalizeFeatures())
-    elif dataset in ["Computers", "Photo"]:
-        dataset = Amazon(path,dataset, T.NormalizeFeatures())
-    elif dataset in ["Cora", "Citeseer", "Pubmed"]:
-        dataset = Planetoid(path, dataset, T.NormalizeFeatures())
-    data = dataset[0]
-    if supervised:
-        if full_data:
-            data.train_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.train_mask[:-1000] = 1
-            data.val_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.val_mask[-1000: -500] = 1
-            data.test_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.test_mask[-500:] = 1
-        else:
-            data.train_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.train_mask[:1000] = 1
-            data.val_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.val_mask[1000: 1500] = 1
-            data.test_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
-            data.test_mask[1500:2000] = 1
+    # if dataset in ["CS", "Physics"]:
+    #     dataset = Coauthor(path, dataset, T.NormalizeFeatures())
+    # elif dataset in ["Computers", "Photo"]:
+    #     dataset = Amazon(path,dataset, T.NormalizeFeatures())
+    # elif dataset in ["Cora", "Citeseer", "Pubmed"]:
+    #     dataset = Planetoid(path, dataset, T.NormalizeFeatures())
+    # data = dataset[0]
+    # load Citeseer dataset
+    data = Planetoid(path, "Citeseer")[0]
+    if full_data:
+        data.train_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.train_mask[:-1000] = 1
+        data.val_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.val_mask[-1000: -500] = 1
+        data.test_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.test_mask[-500:] = 1
+    else:
+        data.train_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.train_mask[:1000] = 1
+        data.val_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.val_mask[1000: 1500] = 1
+        data.test_mask = torch.zeros(data.num_nodes, dtype=torch.uint8)
+        data.test_mask[1500:2000] = 1
     return data
 
 

@@ -50,12 +50,15 @@ if __name__ == "__main__":
     args = build_args()
 
     gnn_list = [
-        ['gat', 'sum', 'linear', 4, 128, 'linear', 'sum', 'elu', 8, 6],
-        ['gcn', 'sum', 'tanh', 6, 64, 'cos', 'sum', 'tanh', 6, 3],
-        ['const', 'sum', 'relu6', 2, 128, 'gat', 'sum', 'linear', 2, 7],
+        # ['gat', 'sum', 'linear', 4, 128, 'linear', 'sum', 'elu', 8, 6],
+        # ['gcn', 'sum', 'tanh', 6, 64, 'cos', 'sum', 'tanh', 6, 3],
+        # ['const', 'sum', 'relu6', 2, 128, 'gat', 'sum', 'linear', 2, 7],
+        ['linear', 'sum', 'elu', 8, 128, 'generalized_linear', 'sum', 'elu', 8, 7],
     ]
-    dataset_list = ["Citeseer", "Pubmed", "cora"]
-    base_list = ["pyg", "pyg", "dgl", ]
+    # dataset_list = ["Citeseer", "Pubmed", "Cora"]
+    dataset_list = ["Cora",]
+    # base_list = ["pyg", "pyg", "dgl", ]
+    base_list = ["dgl", ]
     for dataset, actions, base in zip(dataset_list, gnn_list, base_list):
         # if dataset == "cora":
         #     continue
@@ -64,6 +67,7 @@ if __name__ == "__main__":
             manager = CitationGNNManager(args)
         else:
             manager = GeoCitationManager(args)
+
         test_scores_list = []
         for i in range(100):
             val_acc, test_acc = manager.evaluate(actions)
